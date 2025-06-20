@@ -1,31 +1,23 @@
 package main
 
-import "fmt"
+import (
+	"flag"
+	"fmt"
+	"os"
 
-type LoadBalancer struct {
-	servers   []string
-	nextIndex int
-}
+	"github.com/odrianoaliveira/mini-loadbalancer/internal"
+)
 
 func main() {
-	// Initialize the load balancer
-	lb := NewLoadBalancer()
+	cfgFile := flag.String("config", "config.yaml", "Path to the configuration file")
+	flag.Parse()
 
-	// Start the load balancer
-	go lb.Start()
-
-	// Simulate adding servers
-	lb.AddServer("http://server1.com")
-	lb.AddServer("http://server2.com")
-
-	// Simulate handling requests
-	for i := 0; i < 10; i++ {
-		go func(reqID int) {
-			server := lb.GetNextServer()
-			fmt.Printf("Request %d is being handled by %s\n", reqID, server)
-		}(i)
+	if *cfgFile == "" {
+		fmt.Println("Configuration file path is required")
+		flag.Usage()
+		os.Exit(1)
 	}
 
-	// Keep the main goroutine alive
-	select {}
+	lb := internal.NewLoadBalancer(*cfgFile)
+	lb.Start()
 }

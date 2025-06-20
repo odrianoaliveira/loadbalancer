@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	cfgFile := flag.String("config", "config.yaml", "Path to the configuration file")
+	cfgFile := flag.String("config", "", "Path to the configuration file")
 	flag.Parse()
 
 	if *cfgFile == "" {

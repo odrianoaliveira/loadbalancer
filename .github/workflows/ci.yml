@@ -34,5 +34,12 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.24'
+<<<<<<< HEAD
       - name: Run linter
         run: make lint
+=======
+      - name: Run linters
+        run: make lint
+
+        
+>>>>>>> 3697b25 (chore(ci): run linter on ci)

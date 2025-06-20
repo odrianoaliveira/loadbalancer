@@ -36,3 +36,4 @@ jobs:
           go-version: '1.24'
       - name: Run linter
         run: make lint
+

@@ -1,0 +1,29 @@
+# Binaries
+loadbalancer
+
+# Test binary
+\*.test
+
+# Output of the go coverage tool
+gocov.out
+
+# Logs and temp files
+\*.log
+\*.tmp
+\*.swp
+
+# IDE/editor directories and files
+.vscode/
+.idea/
+\*.iml
+
+# OS-specific
+.DS\_Store
+Thumbs.db
+
+# CI/CD artifacts
+coverage.out
+
+# Config files (if sensitive)
+*.env
+configs/*.local.yaml

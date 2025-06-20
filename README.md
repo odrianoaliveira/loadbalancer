@@ -48,7 +48,7 @@ loadbalancer:
 ```bash
 git clone https://github.com/yourorg/loadbalancer.git
 cd loadbalancer
-go build -o loadbalancer ./cmd/loadbalancer
+make build
 ./loadbalancer -config ./configs/loadbalancer.yaml
 ```
 

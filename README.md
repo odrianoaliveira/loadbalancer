@@ -49,7 +49,7 @@ loadbalancer:
 git clone https://github.com/yourorg/loadbalancer.git
 cd loadbalancer
 make build
-./loadbalancer -config ./configs/loadbalancer.yaml
+./loadbalancer -config ./configs/config.yaml
 ```
 
 ## 🛠️ Development Best Practices

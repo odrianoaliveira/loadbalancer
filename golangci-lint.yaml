@@ -1,0 +1,48 @@
+run:
+  timeout: 3m                # Max time golangci-lint will run for (prevents hung jobs)
+  tests: true                # Lint test files too (recommended for most teams)
+
+linters:
+  disable-all: true          # Start with all linters disabled for explicit control
+  enable:
+    # Safety and correctness
+    - staticcheck            # Detects bugs, performance issues, and code simplifications
+    - gosec                  # Security issues (e.g., hardcoded credentials, unsafe calls)
+    - errcheck               # Ensures errors from functions are properly handled
+
+    # Performance
+    - prealloc               # Suggests preallocation for slices where beneficial
+
+    # Style and formatting
+    - gofmt                  # Checks Go formatting; enforces `gofmt` rules
+    - goconst                # Finds repeated strings/values that could be constants
+    - unconvert              # Detects redundant type conversions
+    - misspell               # Detects commonly misspelled English words
+    - unparam                # Finds unused function parameters
+    - nakedret               # Flags naked returns in functions (improves clarity)
+    - tagliatelle            # Checks struct tag style
+    - dupl                   # Detects code duplication
+
+linters-settings:
+  gofmt:
+    rewrite-rules:
+      - pattern: 'interface{}'
+        replacement: 'any'   # Modernizes interface{} to any (Go 1.18+)
+      - pattern: 'a[b:len(a)]'
+        replacement: 'a[b:]' # Simplifies slice expressions
+
+  misspell:
+    locale: US               # Use US English spelling
+
+  errcheck:
+    check-type-assertions: true  # Check error handling for type assertions
+
+  dupl:
+    threshold: 100           # Token count for duplication to trigger a finding (lower = stricter)
+
+issues:
+  max-same-issues: 0         # Unlimited same-issue reporting (set >0 to suppress spam)
+  max-issues-per-linter: 0   # Unlimited per-linter (set >0 to cap)
+  exclude-use-default: true  # Use default set of exclusions, extend below as needed
+  exclude:
+    - G104                   # Exclude gosec's "Unhandled error" finding (if not relevant in your context)

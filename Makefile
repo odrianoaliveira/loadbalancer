@@ -11,7 +11,7 @@ build-ci:
 	go build -v ./...
 
 # Deployment Build: Build the main binary for deployment
-build-deploy:
+build:
 	go build -o $(BINARY_NAME) $(CMD_PATH)
 
 # Run tests with race detector and coverage

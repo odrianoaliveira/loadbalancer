@@ -2,12 +2,16 @@
 BINARY_NAME=loadbalancer
 CMD_PATH=./cmd/loadbalancer
 
-.PHONY: all build test lint clean run
+.PHONY: all build-ci build-deploy test lint clean run
 
 all: build
 
-# Build the binary
-build:
+# CI Build: Check that everything compiles, but don't produce a binary
+build-ci:
+	go build -v ./...
+
+# Deployment Build: Build the main binary for deployment
+build-deploy:
 	go build -o $(BINARY_NAME) $(CMD_PATH)
 
 # Run tests with race detector and coverage

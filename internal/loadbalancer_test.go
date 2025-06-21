@@ -19,7 +19,8 @@ func TestMapToBackends(t *testing.T) {
 		},
 	}
 
-	mappedBackends := mapToBackends(cfg.LoadBalancerConfig.Backends)
+	err, mappedBackends := mapToBackends(cfg.LoadBalancerConfig.Backends)
+	require.NoError(t, err, "expected no error when mapping backends")
 	require.Len(t, mappedBackends, 2, "expected two backends to be mapped")
 
 	var expectedURLs = []string{
@@ -29,7 +30,7 @@ func TestMapToBackends(t *testing.T) {
 
 	var actualURLs []string
 	for _, backend := range mappedBackends {
-		actualURLs = append(actualURLs, backend.URL)
+		actualURLs = append(actualURLs, backend.URL.String())
 	}
 	assert.ElementsMatch(t, expectedURLs, actualURLs, "backend URLs do not match")
 }

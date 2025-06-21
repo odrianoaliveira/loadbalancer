@@ -1,0 +1,21 @@
+name: Cache Deps
+on:
+  workflow_call:
+
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Go modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+            vendor
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Cache hit?
+        if: steps.cache.outputs.cache-hit == 'true'
+        run: echo "✅ Cache hit — using cached dependencies."

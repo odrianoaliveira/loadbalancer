@@ -1,6 +1,11 @@
 package internal
 
-import "github.com/odrianoaliveira/mini-loadbalancer/pkg/config"
+import (
+	"fmt"
+	"net/url"
+
+	"github.com/odrianoaliveira/loadbalancer/pkg/config"
+)
 
 type LoadBalancer struct {
 	backends  []Backend
@@ -21,21 +26,30 @@ func NewLoadBalancer(filePath string) *LoadBalancer {
 		panic("No backends defined in configuration")
 	}
 
-	return &LoadBalancer{
-		backends:  mapToBackends(cfg.LoadBalancerConfig.Backends),
-		nextIndex: 0,
+	if err, bes := mapToBackends(cfg.LoadBalancerConfig.Backends); err != nil {
+		return &LoadBalancer{
+			backends:  bes,
+			nextIndex: 0,
+		}
+	} else {
+		panic("Failed to map backends: " + err.Error())
 	}
+
 }
 
-func mapToBackends(backend []config.Backend) []Backend {
+func mapToBackends(backend []config.Backend) (error, []Backend) {
 	var backends []Backend
 	for _, b := range backend {
+		parsedURL, err := url.Parse(b.URL)
+		if err != nil {
+			return fmt.Errorf("Invalid URL in configuration: %s", b.URL), nil
+		}
 		backends = append(backends, Backend{
-			URL:         b.URL,
+			URL:         parsedURL,
 			IsAlive:     true,
 			connections: 0,
 		})
 	}
 
-	return backends
+	return nil, backends
 }

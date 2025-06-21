@@ -35,5 +35,5 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: *go-version
-      - uses: .github/workflows/cache.yml
-      - uses: .github/workflows/golangci-lint.yml
+      - uses: ./.github/workflows/cache.yml
+      - uses: ./.github/workflows/golangci-lint.yml

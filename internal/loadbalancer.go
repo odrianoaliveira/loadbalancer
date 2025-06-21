@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/odrianoaliveira/mini-loadbalancer/pkg/config"
+	"github.com/odrianoaliveira/loadbalancer/pkg/config"
 )
 
 type LoadBalancer struct {

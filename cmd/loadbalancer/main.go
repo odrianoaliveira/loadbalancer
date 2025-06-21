@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/odrianoaliveira/mini-loadbalancer/internal"
+	"github.com/odrianoaliveira/loadbalancer/internal"
 )
 
 func main() {

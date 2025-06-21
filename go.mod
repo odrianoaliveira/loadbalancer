@@ -1,4 +1,4 @@
-module github.com/odrianoaliveira/mini-loadbalancer
+module github.com/odrianoaliveira/loadbalancer
 
 go 1.24.4
 

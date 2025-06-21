@@ -3,7 +3,7 @@ package internal
 import (
 	"testing"
 
-	"github.com/odrianoaliveira/mini-loadbalancer/pkg/config"
+	"github.com/odrianoaliveira/loadbalancer/pkg/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

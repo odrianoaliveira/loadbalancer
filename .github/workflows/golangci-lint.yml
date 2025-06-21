@@ -11,8 +11,8 @@ permissions:
   # pull-requests: read
 
 jobs:
-  golangci:
-    name: lint
+  run-linter:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -11,6 +11,8 @@ CMD_PATH=./cmd/loadbalancer
 PING_PONG_BIN_NAME=ping-pong
 PING_PONG_CMD_PATH=./cmd/ping-pong
 
+BIN_DIR=./bin
+
 .PHONY: all help build-ci build build-linux build-deploy test test-ci lint vendor clean run run-pong install-deps
 
 all: build
@@ -37,8 +39,9 @@ build-ci: install-deps vendor
 
 # Deployment Build: Build the main binaries for deployment
 build: install-deps vendor
-	go build -mod=vendor -o $(BINARY_NAME) $(CMD_PATH)
-	go build -mod=vendor -o $(PING_PONG_BIN_NAME) $(PING_PONG_CMD_PATH)
+	mkdir -p $(BIN_DIR)
+	go build -mod=vendor -o $(BIN_DIR)/$(BINARY_NAME) $(CMD_PATH)
+	go build -mod=vendor -o $(BIN_DIR)/$(PING_PONG_BIN_NAME) $(PING_PONG_CMD_PATH)
 
 # Run tests with race detector and coverage
 test: lint
@@ -64,12 +67,13 @@ vendor: install-deps
 # Remove built files and cache
 clean:
 	go clean
-	rm -f $(BINARY_NAME) $(PING_PONG_BIN_NAME)
+	rm -f $(BIN_DIR)/$(BINARY_NAME) $(BIN_DIR)/$(PING_PONG_BIN_NAME)
 	rm -rf vendor coverage.out coverage.txt bin
+	rm -rf $(BIN_DIR)
 
 # Run the binary with default config
 run: build
-	./$(BINARY_NAME) -config config.yaml
+	$(BIN_DIR)/$(BINARY_NAME) -config config.yaml
 
 # This target will launch the Pong service for testing.
 # Usage:
@@ -77,6 +81,6 @@ run: build
 run-pong: build
 	@if [ -z "$(port)" ]; then \
 		echo "Usage: make run-pong port=8080"; \
-		exit 1; \
+	exit 1; \
 	fi
-	./$(PING_PONG_BIN_NAME) -port $(port)
+	$(BIN_DIR)/$(PING_PONG_BIN_NAME) -port $(port)

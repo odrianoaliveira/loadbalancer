@@ -18,7 +18,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: &go-version '1.24'
+          go-version: '1.24'
       - uses: ./.github/workflows/cache.yml
       - name: Build the application
         run: make build-ci
@@ -34,6 +34,6 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: *go-version
+          go-version: '1.24'
       - uses: ./.github/workflows/cache.yml
       - uses: ./.github/workflows/golangci-lint.yml

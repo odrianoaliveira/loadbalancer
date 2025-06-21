@@ -26,7 +26,7 @@ func NewLoadBalancer(filePath string) *LoadBalancer {
 		panic("No backends defined in configuration")
 	}
 
-	if err, bes := mapToBackends(cfg.LoadBalancerConfig.Backends); err != nil {
+	if err, bes := mapToBackends(cfg.LoadBalancerConfig.Backends); err == nil {
 		return &LoadBalancer{
 			backends:  bes,
 			nextIndex: 0,

@@ -16,3 +16,4 @@ runs:
     - name: Cache hit?
       if: steps.cache.outputs.cache-hit == 'true'
       run: echo "✅ Cache hit — using cached dependencies."
+      shell: bash

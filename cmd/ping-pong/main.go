@@ -12,8 +12,6 @@ func main() {
 	port := flag.Int("port", 8001, "port to listen on")
 	flag.Parse()
 
-	_ = fmt.Sprintf("unused variable") // introduce an unused variable to trigger gocilint
-
 	mux := http.NewServeMux()
 	mux.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Received ping request from %s", r.RemoteAddr)

@@ -19,7 +19,7 @@ func TestMapToBackends(t *testing.T) {
 		},
 	}
 
-	err, mappedBackends := mapToBackends(cfg.LoadBalancerConfig.Backends)
+	mappedBackends, err := mapToBackends(cfg.LoadBalancerConfig.Backends)
 	require.NoError(t, err, "expected no error when mapping backends")
 	require.Len(t, mappedBackends, 2, "expected two backends to be mapped")
 

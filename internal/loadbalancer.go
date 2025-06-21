@@ -26,7 +26,7 @@ func NewLoadBalancer(filePath string) *LoadBalancer {
 		panic("No backends defined in configuration")
 	}
 
-	if err, bes := mapToBackends(cfg.LoadBalancerConfig.Backends); err == nil {
+	if bes, err := mapToBackends(cfg.LoadBalancerConfig.Backends); err == nil {
 		return &LoadBalancer{
 			backends:  bes,
 			nextIndex: 0,
@@ -37,12 +37,12 @@ func NewLoadBalancer(filePath string) *LoadBalancer {
 
 }
 
-func mapToBackends(backend []config.Backend) (error, []Backend) {
+func mapToBackends(backend []config.Backend) ([]Backend, error) {
 	var backends []Backend
 	for _, b := range backend {
 		parsedURL, err := url.Parse(b.URL)
 		if err != nil {
-			return fmt.Errorf("Invalid URL in configuration: %s", b.URL), nil
+			return nil, fmt.Errorf("invalid URL in configuration: %s", b.URL)
 		}
 		backends = append(backends, Backend{
 			URL:         parsedURL,
@@ -51,5 +51,5 @@ func mapToBackends(backend []config.Backend) (error, []Backend) {
 		})
 	}
 
-	return nil, backends
+	return backends, nil
 }

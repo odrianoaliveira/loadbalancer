@@ -1,11 +1,17 @@
 # Binaries
 loadbalancer
+ping-pong
+bin/
 
 # Test binary
 \*.test
 
 # Output of the go coverage tool
 gocov.out
+coverage.txt
+
+#vendor directory
+vendor/
 
 # Logs and temp files
 \*.log

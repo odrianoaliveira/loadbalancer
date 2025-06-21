@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.24'
-      - uses: ./.github/actions/cache.yml
+      - uses: ./.github/actions/cache
       - name: Build the application
         run: make build-ci
       - name: Run tests
@@ -35,5 +35,5 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.24'
-      - uses: ./.github/actions/cache.yml
-      - uses: ./.github/actions/golangci-lint.yml
+      - uses: ./.github/actions/cache
+      - uses: ./.github/actions/lint

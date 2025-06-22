@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"net/http"
 	"net/url"
 
 	"github.com/odrianoaliveira/loadbalancer/pkg/config"
@@ -15,7 +16,19 @@ type LoadBalancer struct {
 }
 
 func (l *LoadBalancer) Start() {
-	panic("unimplemented")
+	l.logger.Info("Starting load balancer...")
+	listenAddr := ":9090" //TODO: make this configurable
+	rrLb := NewRoundRobinReverseProxy(l.backends, l.logger)
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		rrLb.Serve().ServeHTTP(w, r)
+	})
+
+	if err := http.ListenAndServe(listenAddr, nil); err != nil {
+		l.logger.Fatal("ListenAndServe failed", zap.Error(err))
+	}
+	l.logger.Info("Load balancer started", zap.String("address", listenAddr))
+	rrLb.Serve()
 }
 
 func NewLoadBalancer(filePath string, log *zap.Logger) (*LoadBalancer, error) {

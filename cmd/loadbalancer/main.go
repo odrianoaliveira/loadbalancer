@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/odrianoaliveira/loadbalancer/internal"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -18,6 +19,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	lb := internal.NewLoadBalancer(*cfgFile)
+	logger := internal.NewLogger()
+
+	lb, err := internal.NewLoadBalancer(*cfgFile, logger)
+	if err != nil {
+		logger.Error("Failed to create load balancer", zap.Error(err))
+		os.Exit(1)
+	}
 	lb.Start()
 }

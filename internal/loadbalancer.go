@@ -5,9 +5,11 @@ import (
 	"net/url"
 
 	"github.com/odrianoaliveira/loadbalancer/pkg/config"
+	"go.uber.org/zap"
 )
 
 type LoadBalancer struct {
+	logger    *zap.Logger
 	backends  []Backend
 	nextIndex int
 }
@@ -16,23 +18,24 @@ func (l *LoadBalancer) Start() {
 	panic("unimplemented")
 }
 
-func NewLoadBalancer(filePath string) *LoadBalancer {
+func NewLoadBalancer(filePath string, log *zap.Logger) (*LoadBalancer, error) {
 	cfg, err := config.ReadConfig(filePath)
 	if err != nil {
-		panic("Failed to read configuration: " + err.Error())
+		return nil, fmt.Errorf("failed to read configuration: %w", err)
 	}
 
 	if len(cfg.LoadBalancerConfig.Backends) == 0 {
-		panic("No backends defined in configuration")
+		return nil, fmt.Errorf("no backends configured in the load balancer configuration")
 	}
 
 	if bes, err := mapToBackends(cfg.LoadBalancerConfig.Backends); err == nil {
 		return &LoadBalancer{
+			logger:    log,
 			backends:  bes,
 			nextIndex: 0,
-		}
+		}, nil
 	} else {
-		panic("Failed to map backends: " + err.Error())
+		return nil, fmt.Errorf("failed to map backends: %w", err)
 	}
 
 }

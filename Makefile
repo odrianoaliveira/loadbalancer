@@ -56,9 +56,9 @@ test-ci: install-deps vendor
 lint: install-deps vendor
 	@if ! [ -x "$$(command -v golangci-lint)" ]; then \
 		echo "Installing golangci-lint..."; \
-		GOBIN=$(PWD)/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest; \
+		go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8; \
 	fi
-	./bin/golangci-lint run
+	golangci-lint run
 
 # Vendor dependencies
 vendor: install-deps

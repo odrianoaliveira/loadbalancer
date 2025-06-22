@@ -1,0 +1,6 @@
+### HTTP Rest documentation https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+
+### Send a ping request
+GET http://localhost:8080/ping
+Accept: text/plain

@@ -15,6 +15,7 @@ type LoadBalancer struct {
 	nextIndex int
 }
 
+// TODO: cover with tests
 func (l *LoadBalancer) Start() {
 	l.logger.Info("Starting load balancer...")
 	listenAddr := ":9090" //TODO: make this configurable
@@ -24,11 +25,10 @@ func (l *LoadBalancer) Start() {
 		rrLb.Serve().ServeHTTP(w, r)
 	})
 
+	l.logger.Info("Load balancer started", zap.String("address", listenAddr))
 	if err := http.ListenAndServe(listenAddr, nil); err != nil {
 		l.logger.Fatal("ListenAndServe failed", zap.Error(err))
 	}
-	l.logger.Info("Load balancer started", zap.String("address", listenAddr))
-	rrLb.Serve()
 }
 
 func NewLoadBalancer(filePath string, log *zap.Logger) (*LoadBalancer, error) {

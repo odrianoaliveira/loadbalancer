@@ -18,6 +18,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	lb := internal.NewLoadBalancer(*cfgFile)
+	logger := internal.NewLogger()
+
+	lb := internal.NewLoadBalancer(*cfgFile, logger)
 	lb.Start()
 }

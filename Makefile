@@ -32,16 +32,23 @@ help:
 	@echo "  clean        Clean binaries and cache"
 	@echo "  run          Run main binary"
 	@echo "  run-pong     Run ping-pong binary (use: make run-pong port=8080)"
+	@echo "  image        Build Docker image for the main binary"
 
 # CI Build: Check that everything compiles, but don't produce a binary
 build-ci: install-deps vendor
 	go build -mod=vendor -v ./...
 
 # Deployment Build: Build the main binaries for deployment
+#
+# CGO_ENABLED=0, Go builds a fully static binary (no dynamic linking to libc or other C libraries)
+# Distroless images do not contain libc or any C libraries
+#
+# -trimpath removes file system paths from the compiled binary, which is useful for cleaner stack traces and smaller binary size.
+# -ldflags="-s -w" reduces the binary size by omitting debug information and symbol tables.
 build: install-deps vendor
 	mkdir -p $(BIN_DIR)
-	go build -mod=vendor -o $(BIN_DIR)/$(BINARY_NAME) $(CMD_PATH)
-	go build -mod=vendor -o $(BIN_DIR)/$(PING_PONG_BIN_NAME) $(PING_PONG_CMD_PATH)
+	CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -mod=vendor -o $(BIN_DIR)/$(BINARY_NAME) $(CMD_PATH)
+	CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -mod=vendor -o $(BIN_DIR)/$(PING_PONG_BIN_NAME) $(PING_PONG_CMD_PATH)
 
 # Run tests with race detector and coverage
 test: lint
@@ -84,3 +91,6 @@ run-pong: build
 	exit 1; \
 	fi
 	$(BIN_DIR)/$(PING_PONG_BIN_NAME) -port $(port)
+
+image: build
+	podman build -t adriano/$(BINARY_NAME):latest .

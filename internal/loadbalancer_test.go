@@ -3,16 +3,15 @@ package internal
 import (
 	"testing"
 
-	"github.com/odrianoaliveira/loadbalancer/pkg/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestMapToBackends(t *testing.T) {
-	cfg := &config.Config{
-		LoadBalancerConfig: config.LoadBalancerConfig{
+	cfg := &Config{
+		LoadBalancerConfig: LoadBalancerConfig{
 			Strategy: "round-robin",
-			Backends: []config.Backend{
+			Backends: []BackendConfig{
 				{URL: "http://localhost:8081"},
 				{URL: "http://localhost:8082"},
 			},

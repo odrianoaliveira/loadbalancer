@@ -73,7 +73,7 @@ clean:
 
 # Run the binary with default config
 run: build
-	$(BIN_DIR)/$(BINARY_NAME) -config config/config.yaml
+	$(BIN_DIR)/$(BINARY_NAME) -config cmd/loadbalancer/config.yaml
 
 # This target will launch the Pong service for testing.
 # Usage:

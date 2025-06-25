@@ -12,23 +12,25 @@ import (
 
 type RoundRobinReverseProxy struct {
 	logger   *zap.Logger
-	backends []*url.URL
+	backends []url.URL
 	tcounter uint64
 }
 
-func NewRoundRobinReverseProxy(backends []Backend, log *zap.Logger) *RoundRobinReverseProxy {
-	var bes []*url.URL
+func NewRoundRobinReverseProxy(backends []Backend, log *zap.Logger) RoundRobinReverseProxy {
+	var bes []url.URL
+
 	for _, b := range backends {
 		bes = append(bes, b.URL)
 	}
-	return &RoundRobinReverseProxy{
+
+	return RoundRobinReverseProxy{
 		logger:   log,
 		backends: bes,
 		tcounter: 0,
 	}
 }
 
-func (r *RoundRobinReverseProxy) Serve() *httputil.ReverseProxy {
+func (r *RoundRobinReverseProxy) WithProxy() *httputil.ReverseProxy {
 	director := func(req *http.Request) {
 		target, err := r.nextBE()
 		if err != nil {
@@ -45,9 +47,9 @@ func (r *RoundRobinReverseProxy) Serve() *httputil.ReverseProxy {
 	return &httputil.ReverseProxy{Director: director}
 }
 
-func (r *RoundRobinReverseProxy) nextBE() (*url.URL, error) {
+func (r *RoundRobinReverseProxy) nextBE() (url.URL, error) {
 	if len(r.backends) == 0 {
-		return nil, fmt.Errorf("no backends available")
+		return url.URL{}, fmt.Errorf("no backends available")
 	}
 	atomic.AddUint64(&r.tcounter, 1)
 

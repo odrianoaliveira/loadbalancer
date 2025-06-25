@@ -73,14 +73,14 @@ clean:
 
 # Run the binary with default config
 run: build
-	$(BIN_DIR)/$(BINARY_NAME) -config config.yaml
+	$(BIN_DIR)/$(BINARY_NAME) -config cmd/loadbalancer/config.yaml
 
 # This target will launch the Pong service for testing.
 # Usage:
 #   make run-pong port=<port>, where <port> is the port number for the Pong service.
 run-pong: build
 	@if [ -z "$(port)" ]; then \
-		echo "Usage: make run-pong port=8080"; \
+		echo "Usage: make run-pong port=8081"; \
 	exit 1; \
 	fi
 	$(BIN_DIR)/$(PING_PONG_BIN_NAME) -port $(port)

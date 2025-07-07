@@ -65,8 +65,10 @@ func TestNewLoadBalancer_Success(t *testing.T) {
 
 	lb, err := NewLoadBalancer(tmpFile.Name())
 	require.NoError(t, err)
-	assert.Len(t, lb.backends, 2)
-	assert.Equal(t, 0, lb.nextIndex)
+	require.NotNil(t, lb, "expected load balancer to be created")
+	rr, ok := lb.(*RoundRobinLoadBalancer)
+	require.True(t, ok, "expected lb to be of type *RoundRobinLoadBalancer")
+	require.Len(t, rr.backends, 2, "expected two backends in RoundRobinLoadBalancer")
 }
 
 func TestNewLoadBalancer_InvalidConfig(t *testing.T) {

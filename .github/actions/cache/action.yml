@@ -3,6 +3,12 @@ description: Cache Go build and module files
 runs:
   using: "composite"
   steps:
+    - name: Change permissions for cached directories
+      run: |
+        chmod -R 0755 ~/.cache/go-build || true
+        chmod -R 0755 ~/go/pkg/mod || true
+        chmod -R 0755 vendor || true
+      shell: bash
     - name: Cache Go modules
       uses: actions/cache@v4
       with:

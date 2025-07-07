@@ -12,7 +12,6 @@ type LoadBalancer struct {
 	nextIndex int
 }
 
-// TODO: cover with tests
 func (l *LoadBalancer) Start() error {
 	slog.Info("Starting load balancer...")
 	listenAddr := ":9090" //TODO: make this configurable

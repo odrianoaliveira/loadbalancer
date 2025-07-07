@@ -2,21 +2,19 @@ package internal
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"sync/atomic"
-
-	"go.uber.org/zap"
 )
 
 type RoundRobinReverseProxy struct {
-	logger   *zap.Logger
 	backends []url.URL
 	tcounter uint64
 }
 
-func NewRoundRobinReverseProxy(backends []Backend, log *zap.Logger) RoundRobinReverseProxy {
+func NewRoundRobinReverseProxy(backends []Backend) RoundRobinReverseProxy {
 	var bes []url.URL
 
 	for _, b := range backends {
@@ -24,7 +22,6 @@ func NewRoundRobinReverseProxy(backends []Backend, log *zap.Logger) RoundRobinRe
 	}
 
 	return RoundRobinReverseProxy{
-		logger:   log,
 		backends: bes,
 		tcounter: 0,
 	}
@@ -34,7 +31,7 @@ func (r *RoundRobinReverseProxy) WithProxy() *httputil.ReverseProxy {
 	director := func(req *http.Request) {
 		target, err := r.nextBE()
 		if err != nil {
-			r.logger.Error("reverse proxy error", zap.Error(err))
+			slog.Error("reverse proxy error", "error", err)
 			req.URL = nil
 			req.Header.Set("X-Reverse-Proxy-Error", "backend unavailable")
 			return

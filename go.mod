@@ -2,12 +2,7 @@ module github.com/odrianoaliveira/loadbalancer
 
 go 1.24.4
 
-require (
-	go.uber.org/zap v1.27.0
-	gopkg.in/yaml.v3 v3.0.1
-)
-
-require go.uber.org/multierr v1.10.0 // indirect
+require gopkg.in/yaml.v3 v3.0.1
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

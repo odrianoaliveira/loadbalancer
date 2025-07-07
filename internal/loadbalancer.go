@@ -2,25 +2,23 @@ package internal
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/url"
-
-	"go.uber.org/zap"
 )
 
 type LoadBalancer struct {
-	logger    *zap.Logger
 	backends  []Backend
 	nextIndex int
 }
 
 // TODO: cover with tests
 func (l *LoadBalancer) Start() error {
-	l.logger.Info("Starting load balancer...")
+	slog.Info("Starting load balancer...")
 	listenAddr := ":9090" //TODO: make this configurable
-	rrLb := NewRoundRobinReverseProxy(l.backends, l.logger)
+	rrLb := NewRoundRobinReverseProxy(l.backends)
 
-	l.logger.Info("Load balancer started", zap.String("address", listenAddr))
+	slog.Info("Load balancer started", "address", listenAddr)
 
 	if err := http.ListenAndServe(listenAddr, rrLb.WithProxy()); err != nil {
 		return fmt.Errorf("failed to ListenAndServe the load balancer: %w", err)
@@ -29,7 +27,7 @@ func (l *LoadBalancer) Start() error {
 	return nil
 }
 
-func NewLoadBalancer(filePath string, log *zap.Logger) (LoadBalancer, error) {
+func NewLoadBalancer(filePath string) (LoadBalancer, error) {
 	cfg, err := ReadConfig(filePath)
 	if err != nil {
 		return LoadBalancer{}, fmt.Errorf("failed to read configuration: %w", err)
@@ -41,7 +39,6 @@ func NewLoadBalancer(filePath string, log *zap.Logger) (LoadBalancer, error) {
 	}
 
 	return LoadBalancer{
-		logger:    log,
 		backends:  bes,
 		nextIndex: 0,
 	}, nil

@@ -36,7 +36,5 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.24'
-      - id: cache
-        uses: ./.github/actions/cache
       - id: linter
         uses: ./.github/actions/lint

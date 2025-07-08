@@ -22,8 +22,9 @@ func NewRoundRobinLoadBalancer(b baseLoadBalancer) LoadBalancer {
 }
 
 func (r *RoundRobinLoadBalancer) Start() error {
-	slog.Info("Starting load balancer...")
-	listenAddr := ":9090" //TODO: make this configurable
+	port := fmt.Sprintf(":%d", r.port)
+	slog.Info("Starting load balancer...", "port", port)
+	listenAddr := fmt.Sprintf(":%d", r.port)
 
 	slog.Info("Load balancer started", "address", listenAddr)
 	if err := http.ListenAndServe(listenAddr, r.withProxy()); err != nil {

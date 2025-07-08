@@ -14,6 +14,7 @@ const (
 )
 
 type baseLoadBalancer struct {
+	port     int
 	strategy LBStrategy
 	backends []Backend
 }
@@ -37,6 +38,7 @@ func NewLoadBalancer(filePath string) (LoadBalancer, error) {
 	case StrategyRoundRobin:
 		slog.Info("Using Round Robin strategy for load balancing")
 		lb := baseLoadBalancer{
+			port:     cfg.LoadBalancerConfig.Port,
 			strategy: StrategyRoundRobin,
 			backends: bes,
 		}
@@ -44,6 +46,7 @@ func NewLoadBalancer(filePath string) (LoadBalancer, error) {
 	case StrategyLeastConn:
 		slog.Info("Using Least Connections strategy for load balancing")
 		lb := baseLoadBalancer{
+			port:     cfg.LoadBalancerConfig.Port,
 			strategy: StrategyLeastConn,
 			backends: bes,
 		}

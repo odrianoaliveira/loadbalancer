@@ -14,6 +14,7 @@ func TestReadConfig_Success(t *testing.T) {
 	configContent := `
 loadbalancer:
   strategy: round-robin
+  port: 9090
   backends:
     - url: http://localhost:8081
     - url: http://localhost:8082
@@ -38,6 +39,7 @@ loadbalancer:
 
 	assert.ElementsMatch(t, expectedURLs, actualURLs, "unexpected backend URLs")
 
+	assert.Equal(t, 9090, cfg.LoadBalancerConfig.Port, "unexpected port")
 }
 
 func TestReadConfig_FileNotFound(t *testing.T) {

@@ -6,19 +6,19 @@ A lightweight and concurrent load balancer written in Go, designed to distribute
 
 ## ✨ Features
 
-* [ ] Load distribution across downstream services
-* [ ] Round Robin strategy
+* [x] Load distribution across downstream services
+* [x] Round Robin strategy
 * [ ] Least Connections strategy
 * [ ] Sticky Sessions based on configurable key (e.g., user ID, IP address)
-* [ ] Configurable downstream members via a configuration file
-* [ ] Health checking for downstream services (planned)
+* [x] Configurable downstream members via a configuration file
+* [ ] Health checking for downstream services
 * [ ] Prometheus metrics
 
 ## 🌎 Load Balancing Strategies
 
 ### Round Robin
 
-Evenly distributes requests to downstreams in a circular fashion.
+It even distributes requests downstream in a circular fashion.
 
 ### Least Connections
 
@@ -37,6 +37,7 @@ Example (YAML):
 ```yaml
 loadbalancer:
   strategy: round_robin  # Options: round_robin, least_connections, sticky
+  port: 9090
   sticky_key: X-Session-ID
   backends:
     - url: http://localhost:8081

@@ -12,6 +12,7 @@ type BackendConfig struct {
 }
 
 type LoadBalancerConfig struct {
+	Port     int             `yaml:"port"`
 	Strategy LBStrategy      `yaml:"strategy"`
 	Backends []BackendConfig `yaml:"backends"`
 }

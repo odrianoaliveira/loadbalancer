@@ -12,7 +12,7 @@ type BackendConfig struct {
 }
 
 type LoadBalancerConfig struct {
-	Strategy string          `yaml:"strategy"`
+	Strategy LBStrategy      `yaml:"strategy"`
 	Backends []BackendConfig `yaml:"backends"`
 }
 

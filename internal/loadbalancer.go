@@ -3,44 +3,55 @@ package internal
 import (
 	"fmt"
 	"log/slog"
-	"net/http"
 	"net/url"
 )
 
-type LoadBalancer struct {
-	backends  []Backend
-	nextIndex int
+type LBStrategy string
+
+const (
+	StrategyRoundRobin LBStrategy = "round-robin"
+	StrategyLeastConn  LBStrategy = "least-connections"
+)
+
+type baseLoadBalancer struct {
+	strategy LBStrategy
+	backends []Backend
 }
 
-func (l *LoadBalancer) Start() error {
-	slog.Info("Starting load balancer...")
-	listenAddr := ":9090" //TODO: make this configurable
-	rrLb := NewRoundRobinReverseProxy(l.backends)
-
-	slog.Info("Load balancer started", "address", listenAddr)
-
-	if err := http.ListenAndServe(listenAddr, rrLb.WithProxy()); err != nil {
-		return fmt.Errorf("failed to ListenAndServe the load balancer: %w", err)
-	}
-
-	return nil
+type LoadBalancer interface {
+	Start() error
 }
 
 func NewLoadBalancer(filePath string) (LoadBalancer, error) {
 	cfg, err := ReadConfig(filePath)
 	if err != nil {
-		return LoadBalancer{}, fmt.Errorf("failed to read configuration: %w", err)
+		return nil, fmt.Errorf("failed to read configuration: %w", err)
 	}
 
 	bes, err := mapToBackends(cfg.LoadBalancerConfig.Backends)
 	if err != nil {
-		return LoadBalancer{}, fmt.Errorf("failed to map backends: %w", err)
+		return nil, fmt.Errorf("failed to map backends: %w", err)
 	}
 
-	return LoadBalancer{
-		backends:  bes,
-		nextIndex: 0,
-	}, nil
+	switch cfg.LoadBalancerConfig.Strategy {
+	case StrategyRoundRobin:
+		slog.Info("Using Round Robin strategy for load balancing")
+		lb := baseLoadBalancer{
+			strategy: StrategyRoundRobin,
+			backends: bes,
+		}
+		return NewRoundRobinLoadBalancer(lb), nil
+	case StrategyLeastConn:
+		slog.Info("Using Least Connections strategy for load balancing")
+		lb := baseLoadBalancer{
+			strategy: StrategyLeastConn,
+			backends: bes,
+		}
+		return NewLeastConnectionsLoadBalancer(lb), nil
+	default:
+		return nil, fmt.Errorf("unsupported load balancing strategy: %s", cfg.LoadBalancerConfig.Strategy)
+	}
+
 }
 
 func mapToBackends(backend []BackendConfig) ([]Backend, error) {

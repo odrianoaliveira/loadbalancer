@@ -24,7 +24,7 @@ loadbalancer:
 	cfg, err := ReadConfig(configPath)
 	require.NoError(t, err, "expected no error")
 
-	assert.Equal(t, "round-robin", cfg.LoadBalancerConfig.Strategy, "unexpected strategy")
+	assert.Equal(t, StrategyRoundRobin, cfg.LoadBalancerConfig.Strategy, "unexpected strategy")
 
 	assert.Len(t, cfg.LoadBalancerConfig.Backends, 2, "unexpected number of backends")
 	expectedURLs := []string{

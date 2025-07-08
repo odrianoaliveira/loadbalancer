@@ -61,9 +61,3 @@ make build
 * Modular packages for extensibility
 * CI/CD integration via GitHub Actions
 
-## 📆 Roadmap
-
-* [ ] Backend health checks
-* [ ] Timeout and retry mechanisms
-* [ ] Metrics & observability (Prometheus, OpenTelemetry)
-* [ ] Dynamic configuration reload
